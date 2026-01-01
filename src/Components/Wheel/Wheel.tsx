@@ -9,18 +9,18 @@ interface WheelData {
 
 // Danh sách món ăn
 const data: WheelData[] = [
-  { option: 'Phở Bò', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Bún Đậu', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Cơm Tấm', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Lẩu Thái', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Bún Bò Huế', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Nem Nướng', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Cơm Rang', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Mì Cay', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Bánh Cuốn', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Gỏi Cuốn', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Bò Kho', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Mỳ Tôm', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } }, 
+  { option: 'Sườn xào chua ngọt', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
+  { option: 'Chả lá lốt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
+  { option: 'Thị kho trứng', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
+  { option: 'Trứng rán', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
+  { option: 'Thịt kho tàu', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
+  { option: 'Nem rán', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
+  { option: 'Mỳ tôm', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
+  { option: 'Đậu nhồi thịt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
+  { option: 'Hoa bí nhồi thịt', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
+  { option: 'Cá kho thịt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
+  { option: 'Thịt rang cháy cạnh', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
+  { option: 'Gà xào sả ớt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } }, 
 ];
 
 const PinkWheel: React.FC = () => {
@@ -61,7 +61,7 @@ const PinkWheel: React.FC = () => {
         `}
       </style>
 
-      <h1 style={styles.title}>✨ Hôm nay ăn gì nhỉ? ✨</h1>
+      <h1 style={styles.title}>✨ Hôm nay nấu món gì nhỉ? ✨</h1>
 
       <div style={styles.wheelWrapper}>
         <Wheel
@@ -102,7 +102,7 @@ const PinkWheel: React.FC = () => {
         <div style={styles.overlay}>
           <div style={styles.modalContent}>
             <h2 style={{ color: '#888', margin: '0 0 10px 0', fontSize: '1.2rem' }}>
-              Hôm nay em phải ăn:
+              Hôm nay em phải nấu món:
             </h2>
             <h1 style={{ color: '#d81b60', fontSize: '2.5rem', margin: '10px 0' }}>
               {winMessage}
