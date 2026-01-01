@@ -1,9 +1,12 @@
 import './App.css'
+import Wheel from './Components/Wheel/Wheel'
 
 function App() {
 
   return (
-    <>hi</>
+    <>
+    <Wheel></Wheel>
+    </>
   )
 }
 
