@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { Wheel } from 'react-custom-roulette';
 
-// Định nghĩa kiểu dữ liệu cho ô
 interface WheelData {
   option: string;
   style?: { backgroundColor: string; textColor?: string };
 }
 
-// Danh sách món ăn
 const data: WheelData[] = [
   { option: 'Sườn xào chua ngọt', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
   { option: 'Chả lá lốt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Thị kho trứng', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
+  { option: 'Thịt kho trứng', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
   { option: 'Trứng rán', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
   { option: 'Thịt kho tàu', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
   { option: 'Nem rán', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
@@ -27,17 +25,12 @@ const PinkWheel: React.FC = () => {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [winMessage, setWinMessage] = useState('');
-  const [showModal, setShowModal] = useState(false); // State kiểm soát Popup
+  const [showModal, setShowModal] = useState(false);
 
   const handleSpinClick = () => {
     if (mustSpin) return;
-
-    // Reset popup cũ nếu có
     setShowModal(false);
-
-    // Random công bằng
     const newPrizeNumber = Math.floor(Math.random() * data.length);
-    
     setPrizeNumber(newPrizeNumber);
     setMustSpin(true);
     setWinMessage('');
@@ -46,12 +39,13 @@ const PinkWheel: React.FC = () => {
   const handleStopSpinning = () => {
     setMustSpin(false);
     setWinMessage(data[prizeNumber].option);
-    setShowModal(true); // Hiển thị Popup khi dừng quay
+    setShowModal(true);
   };
+
+  const isNoodles = winMessage === 'Mỳ tôm';
 
   return (
     <div style={styles.container}>
-      {/* Inject Keyframes animation cho Popup */}
       <style>
         {`
           @keyframes popupScale {
@@ -68,8 +62,6 @@ const PinkWheel: React.FC = () => {
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber}
           data={data}
-          
-          // --- CẤU HÌNH MÀU SẮC ---
           outerBorderColor="#ffffff" 
           outerBorderWidth={8}
           innerRadius={10} 
@@ -77,13 +69,9 @@ const PinkWheel: React.FC = () => {
           innerBorderWidth={4}
           radiusLineColor="#ffffff"
           radiusLineWidth={2}
-          
-          // Font chữ
           fontFamily="Arial"
           fontSize={16}
           perpendicularText={false}
-          
-          // Tốc độ
           spinDuration={0.8}
           onStopSpinning={handleStopSpinning}
         />
@@ -97,23 +85,45 @@ const PinkWheel: React.FC = () => {
         </button>
       </div>
 
-      {/* --- PHẦN POPUP (MODAL) --- */}
       {showModal && (
         <div style={styles.overlay}>
           <div style={styles.modalContent}>
-            <h2 style={{ color: '#888', margin: '0 0 10px 0', fontSize: '1.2rem' }}>
-              Hôm nay em phải nấu món:
-            </h2>
-            <h1 style={{ color: '#d81b60', fontSize: '2.5rem', margin: '10px 0' }}>
-              {winMessage}
-            </h1>
-            <div style={{ fontSize: '3rem', margin: '10px 0' }}>😋</div>
             
+            {isNoodles ? (
+               <>
+                 <h2 style={{ color: '#888', margin: '0 0 10px 0', fontSize: '1.2rem' }}>
+                   Hôm nay em phải nấu:
+                 </h2>
+                 <h1 style={{ color: '#d81b60', fontSize: '2.5rem', margin: '10px 0' }}>
+                   Mỳ tôm 🍜
+                 </h1>
+               </>
+            ) : (
+               <>
+                  <div style={{opacity: 0.6, transform: 'scale(0.8)', marginBottom: '-10px'}}>
+                    <h3 style={{ color: '#888', margin: 0, fontSize: '1rem', textDecoration: 'line-through' }}>
+                      Em đã quay vào: {winMessage}
+                    </h3>
+                  </div>
+
+                  <h2 style={{ color: '#333', margin: '10px 0', fontSize: '1.1rem' }}>
+                    Nhưng mà nấu làm gì giờ này? 
+                  </h2>
+                  
+                  <div style={{ margin: '15px 0', border: '2px dashed #ff4081', padding: '10px', borderRadius: '15px', backgroundColor: '#fff0f6' }}>
+                    <h1 style={{ color: '#d81b60', fontSize: '1rem', margin: '0' }}>
+                      Em nghĩ sao về Mỳ Tôm!
+                    </h1>
+                    <span style={{ fontSize: '3rem' }}>🍜</span>
+                  </div>
+               </>
+            )}
+
             <button 
               onClick={() => setShowModal(false)}
               style={styles.closeButton}
             >
-              Tuyệt vời ❤️
+              {isNoodles ? 'Tuyệt Vời ❤️' : 'Mỳ tôm thật tuyệt vời ❤️'}
             </button>
           </div>
         </div>
@@ -122,7 +132,6 @@ const PinkWheel: React.FC = () => {
   );
 };
 
-// CSS in JS
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     display: 'flex',
@@ -139,6 +148,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginBottom: '20px',
     textShadow: '2px 2px 0px white',
     fontSize: '2rem',
+    textAlign: 'center',
   },
   wheelWrapper: {
     display: 'flex',
@@ -146,14 +156,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     position: 'relative',
     filter: 'drop-shadow(0 10px 15px rgba(255, 105, 180, 0.3))',
-  },
-  pointer: {
-    position: 'absolute',
-    top: '-25px',
-    zIndex: 10,
-    fontSize: '50px',
-    color: '#ff4081',
-    filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.1))',
   },
   button: {
     marginTop: '30px',
@@ -180,11 +182,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '50px',
     cursor: 'not-allowed',
   },
-  // --- Style cho Popup ---
   overlay: {
     position: 'fixed',
     top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Nền tối mờ
+    backgroundColor: 'rgba(0,0,0,0.6)', 
+    backdropFilter: 'blur(2px)', // Thêm hiệu ứng mờ nền
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -192,17 +194,17 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: '40px',
+    padding: '30px',
     borderRadius: '25px',
     textAlign: 'center',
     maxWidth: '90%',
-    width: '350px',
+    width: '380px',
     border: '4px solid #ffc1e3',
     boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-    animation: 'popupScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // Hiệu ứng bung
+    animation: 'popupScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   },
   closeButton: {
-    marginTop: '20px',
+    marginTop: '10px',
     padding: '10px 30px',
     fontSize: '16px',
     fontWeight: 'bold',
