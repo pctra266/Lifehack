@@ -1,6 +1,3 @@
-// Components/DailyGoal/DailyGoal.jsx
-import React from 'react';
-
 const DailyGoal = () => {
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
