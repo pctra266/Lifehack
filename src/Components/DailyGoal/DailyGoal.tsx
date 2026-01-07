@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, CheckCircle, Circle, Plus, Edit3, User, LogOut } from 'lucide-react';
+import { Heart, CheckCircle, Circle, Plus, Edit3, User, LogOut, Trash2 } from 'lucide-react'; // Thêm Trash2
 import './DailyGoal.css';
 
 // Import Firebase
 import { db } from '../../firebase'; 
 import { 
-  collection, addDoc, onSnapshot, updateDoc, setDoc, doc, query, orderBy 
-} from 'firebase/firestore';
+  collection, addDoc, onSnapshot, updateDoc, setDoc, deleteDoc, doc, query, orderBy 
+} from 'firebase/firestore'; // Thêm deleteDoc
 
 interface Goal {
   id: string;
@@ -118,6 +118,14 @@ const MainDashboard: React.FC<{ currentUser: string, onLogout: () => void }> = (
     await updateDoc(doc(db, "daily_goals", goal.id), { cheers: goal.cheers + 1 });
   };
 
+  // --- HÀM XÓA MỤC TIÊU MỚI ---
+  const handleDeleteGoal = async (id: string) => {
+    // Hỏi xác nhận trước khi xóa để tránh lỡ tay
+    if (window.confirm("Bạn có chắc muốn xóa mục tiêu này không?")) {
+      await deleteDoc(doc(db, "daily_goals", id));
+    }
+  };
+
   const saveMyNote = async () => {
     await setDoc(doc(db, "daily_notes", MY_ROLE), { content: myTempNote }, { merge: true });
   };
@@ -141,11 +149,21 @@ const MainDashboard: React.FC<{ currentUser: string, onLogout: () => void }> = (
             <span>{goal.content}</span>
           </div>
           <div className="goal-right">
+            {/* Nếu là của mình thì hiện nút xóa */}
+            {isMine && (
+              <button onClick={() => handleDeleteGoal(goal.id)} className="delete-btn" title="Xóa">
+                <Trash2 size={16} />
+              </button>
+            )}
+
+            {/* Nếu không phải của mình thì hiện nút thả tim */}
             {!isMine && (
               <button onClick={() => cheerGoal(goal)} className="cheer-btn">
                 <Heart size={16} color={goal.cheers > 0 ? '#ec4899' : '#9ca3af'} fill={goal.cheers > 0 ? '#ec4899' : 'none'}/>
               </button>
             )}
+            
+            {/* Hiển thị số lượt tim */}
             {goal.cheers > 0 && <span className="cheer-count">{goal.cheers}</span>}
           </div>
         </div>
@@ -169,7 +187,7 @@ const MainDashboard: React.FC<{ currentUser: string, onLogout: () => void }> = (
       <div className="main-grid">
         <div className="column my-column">
           <div className="column-header">
-            <h3>{getDisplayName(MY_ROLE)}</h3>
+            <h3>{getDisplayName(MY_ROLE)} (Tôi)</h3>
           </div>
           
           <div className="note-board my-note">
@@ -178,7 +196,7 @@ const MainDashboard: React.FC<{ currentUser: string, onLogout: () => void }> = (
               value={myTempNote}
               onChange={(e) => setMyTempNote(e.target.value)}
               onBlur={saveMyNote}
-              placeholder={`How's it going?`}
+              placeholder={`Hôm nay thế nào...`}
             />
           </div>
 
