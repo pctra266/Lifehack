@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, CheckCircle, Circle, Plus, Save, Edit3, User, LogOut } from 'lucide-react';
+import { Heart, CheckCircle, Circle, Plus, Edit3, User, LogOut } from 'lucide-react';
 import './DailyGoal.css';
 
 // Import Firebase
