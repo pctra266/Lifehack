@@ -89,17 +89,11 @@ const PinkWheel: React.FC = () => {
         <div style={styles.overlay}>
           <div style={styles.modalContent}>
                <>
-                  <div style={{opacity: 0.6, transform: 'scale(0.8)', marginBottom: '-10px'}}>
-                    <h3 style={{ color: '#888', margin: 0, fontSize: '1rem', textDecoration: 'line-through' }}>
-                      Em đã quay vào: {winMessage}
-                    </h3>
-                  </div>
-                  
                   <div style={{ margin: '15px 0', border: '2px dashed #ff4081', padding: '10px', borderRadius: '15px', backgroundColor: '#fff0f6' }}>
                     <h1 style={{ color: '#d81b60', fontSize: '1rem', margin: '0' }}>
-                      Em nghĩ sao về Mỳ Tôm!
+                      Hôm nay nấu món: {winMessage}
                     </h1>
-                    <span style={{ fontSize: '3rem' }}>🍜</span>
+                    <span style={{ fontSize: '3rem' }}>😼😼😼</span>
                   </div>
                </>
             <button 
