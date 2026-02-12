@@ -1,7 +1,8 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import Wheel from './Components/Wheel/Wheel'
-import DailyGoal from './Components/DailyGoal/DailyGoal' // Nhớ import component mới
+import DailyGoal from './Components/DailyGoal/DailyGoal'
+import DateCard from './Components/DateIdea/DateCard'
 
 function App() {
 
@@ -15,6 +16,9 @@ function App() {
           <li>
             <Link to="/daily-goal">Daily Goal</Link>
           </li>
+          <li>
+            <Link to="/date-ideas">Discovery</Link>
+          </li>
         </ul>
       </nav>
 
@@ -22,6 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Wheel />} />
           <Route path="/daily-goal" element={<DailyGoal />} />
+          <Route path="/date-ideas" element={<DateCard />} />
         </Routes>
       </div>
     </BrowserRouter>
