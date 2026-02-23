@@ -1,378 +1,262 @@
-/* DailyGoal.css */
+/* DailyGoal.css – Dark Theme */
 
-/* --- Welcome Screen --- */
-.welcome-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #fbcfe8, #fce7f3);
-    font-family: 'Segoe UI', Roboto, sans-serif;
+.dashboard-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: #13131f;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  border: 1px solid #2d2d4e;
+}
+
+.dashboard-header {
+  background: linear-gradient(135deg, #1e1e3f, #2d1b69);
+  color: white;
+  padding: 18px 24px;
+  border-bottom: 1px solid #3f3f6e;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #c4b5fd;
+  letter-spacing: 0.5px;
+}
+
+/* Main Content */
+.main-content {
+  padding: 24px;
+}
+
+/* --- Note Board --- */
+.note-board {
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background-color: #1a1a0f;
+  border: 1px solid #3d3800;
+  transition: box-shadow 0.2s;
+}
+
+.note-board:focus-within {
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+}
+
+.note-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.note-board textarea {
+  width: 100%;
+  border: none;
+  background: transparent;
+  resize: none;
+  font-family: inherit;
+  font-size: 15px;
+  min-height: 80px;
+  outline: none;
+  color: #d1d5db;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.note-board textarea::placeholder {
+  color: #4b5563;
+}
+
+/* --- Add Goal --- */
+.add-goal-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.add-goal-box input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 99px;
+  border: 1px solid #2d2d4e;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  background-color: #1e1e2e;
+  color: #e2e8f0;
+}
+
+.add-goal-box input::placeholder {
+  color: #4b5563;
+}
+
+.add-goal-box input:focus {
+  background-color: #252540;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.add-goal-box button {
+  background-color: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+  flex-shrink: 0;
+}
+
+.add-goal-box button:hover {
+  background-color: #6d28d9;
+  transform: scale(1.05);
+}
+
+/* --- Goal List --- */
+.goal-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-text {
+  text-align: center;
+  color: #4b5563;
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 24px;
+}
+
+.goal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 8px;
+  border-bottom: 1px solid #1f1f35;
+  animation: fadeIn 0.3s ease-out;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.goal-item:hover {
+  background-color: #1a1a2e;
+}
+
+.goal-item:last-child {
+  border-bottom: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
   }
-  
-  .welcome-box {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    max-width: 90%;
-    width: 320px;
-  }
-  
-  .welcome-box h2 {
-    color: #be185d; /* pink-700 */
-    margin-top: 0;
-    margin-bottom: 8px;
-  }
-  
-  .welcome-box p {
-    color: #6b7280;
-    margin-bottom: 24px;
-  }
-  
-  .role-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .role-btn {
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  
-  .role-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
-  .role-btn.boy {
-    background-color: #e0f2fe; /* sky-100 */
-    color: #0369a1; /* sky-700 */
-  }
-  
-  .role-btn.girl {
-    background-color: #fce7f3; /* pink-100 */
-    color: #be185d; /* pink-700 */
-  }
-  
-  /* --- Dashboard --- */
-  .dashboard-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    border: 1px solid #fce7f3;
-  }
-  
-  .dashboard-header {
-    background: linear-gradient(135deg, #f472b6, #fb7185);
-    color: white;
-    padding: 16px 24px;
-  }
-  
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .header-content h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-  }
-  
-  .user-badge {
-    background: rgba(255, 255, 255, 0.25);
-    padding: 6px 12px;
-    border-radius: 99px;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    backdrop-filter: blur(4px);
-  }
-  
-  .logout-btn {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 4px;
-    opacity: 0.8;
-    display: flex;
-    align-items: center;
-    border-radius: 50%;
-    transition: background 0.2s;
-  }
-  
-  .logout-btn:hover {
+
+  to {
     opacity: 1;
-    background-color: rgba(255,255,255,0.2);
+    transform: translateY(0);
   }
-  
-  /* Grid Layout */
-  .main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px; 
-    background-color: #fce7f3; /* Đường kẻ giữa màu hồng nhạt */
-  }
-  
-  @media (max-width: 640px) {
-    .main-grid {
-      grid-template-columns: 1fr;
-      gap: 4px;
-    }
-  }
-  
-  .column {
-    background-color: #fff;
-    padding: 24px;
-    min-height: 400px;
-  }
-  
-  .column-header h3 {
-    margin: 0 0 20px 0;
-    color: #831843; 
-    font-size: 16px;
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid #fce7f3;
-    padding-bottom: 8px;
-  }
-  
-  /* --- Note Board --- */
-  .note-board {
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 24px;
-    position: relative;
-    transition: box-shadow 0.2s;
-  }
-  
-  .note-board:focus-within {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  
-  .my-note {
-    background-color: #fffbeb; /* amber-50 */
-    border: 1px solid #fcd34d; /* amber-300 */
-  }
-  
-  .partner-note {
-    background-color: #f0f9ff; /* sky-50 */
-    border: 1px dashed #bae6fd; /* sky-200 */
-  }
-  
-  .note-title {
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #6b7280;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-  
-  .note-board textarea {
-    width: 100%;
-    border: none;
-    background: transparent;
-    resize: none;
-    font-family: inherit;
-    font-size: 15px;
-    min-height: 70px;
-    outline: none;
-    color: #374151;
-    line-height: 1.6;
-  }
-  
-  .note-content-display {
-    font-size: 15px;
-    color: #374151;
-    min-height: 70px;
-    white-space: pre-wrap;
-    line-height: 1.6;
-  }
-  
-  /* --- Add Goal --- */
-  .add-goal-box {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  
-  .add-goal-box input {
-    flex: 1;
-    padding: 12px 16px;
-    border-radius: 99px;
-    border: 1px solid #e5e7eb;
-    font-size: 14px;
-    outline: none;
-    transition: all 0.2s;
-    background-color: #f9fafb;
-  }
-  
-  .add-goal-box input:focus {
-    background-color: #fff;
-    border-color: #ec4899;
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
-  }
-  
-  .add-goal-box button {
-    background-color: #ec4899;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 5px rgba(236, 72, 153, 0.3);
-  }
-  
-  .add-goal-box button:hover {
-    background-color: #db2777;
-    transform: scale(1.05);
-  }
-  
-  /* --- List --- */
-  .empty-text {
-    text-align: center;
-    color: #d1d5db;
-    font-size: 14px;
-    font-style: italic;
-    margin-top: 24px;
-  }
-  
-  .goal-item-mini {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 12px 0;
-    border-bottom: 1px solid #f3f4f6;
-    animation: fadeIn 0.3s ease-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .goal-item-mini:last-child {
-    border-bottom: none;
-  }
-  
-  .goal-left {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    flex: 1;
-  }
-  
-  .goal-left span {
-    font-size: 15px;
-    margin-top: 1px;
-    line-height: 1.5;
-    color: #1f2937;
-    transition: color 0.2s;
-  }
-  
-  .goal-item-mini.done .goal-left span {
-    text-decoration: line-through;
-    color: #9ca3af;
-  }
-  
-  .check-btn-mini {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    margin-top: 3px;
-    transition: transform 0.2s;
-  }
-  
-  .check-btn-mini:not(.disabled):hover {
-    transform: scale(1.1);
-  }
-  
-  .check-btn-mini.disabled {
-    cursor: default;
-    opacity: 0.5;
-  }
-  
-  .goal-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-left: 8px;
-  }
-  
-  .cheer-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    border-radius: 50%;
-    transition: all 0.2s;
-  }
-  
-  .cheer-btn:hover {
-    background-color: #fce7f3;
-    transform: scale(1.1);
-  }
-  
-  .cheer-count {
-    font-size: 12px;
-    color: #db2777;
-    background: #fdf2f8;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: 700;
-    min-width: 20px;
-    text-align: center;
-  }
-  
-  /* Nút xóa mới */
-  .delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #9ca3af;
-    padding: 6px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s;
-  }
-  
-  .delete-btn:hover {
-    color: #ef4444; /* Màu đỏ */
-    background-color: #fee2e2; /* Nền đỏ nhạt */
-  }
+}
+
+.goal-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.goal-left span {
+  font-size: 15px;
+  color: #e2e8f0;
+  line-height: 1.5;
+  transition: color 0.2s;
+}
+
+.goal-item.done .goal-left span {
+  text-decoration: line-through;
+  color: #4b5563;
+}
+
+.check-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.check-btn:hover {
+  transform: scale(1.1);
+}
+
+.goal-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.star-btn:hover {
+  background-color: #2a2a1a;
+  transform: scale(1.1);
+}
+
+.star-count {
+  font-size: 12px;
+  color: #f59e0b;
+  background: #1f1a00;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4b5563;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  color: #ef4444;
+  background-color: #2a1010;
+}

@@ -7,18 +7,18 @@ interface WheelData {
 }
 
 const data: WheelData[] = [
-  { option: 'Sườn xào chua ngọt', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Chả lá lốt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Thịt kho trứng', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Trứng rán', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Thịt kho tàu', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Nem rán', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Mỳ tôm', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Đậu nhồi thịt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Hoa bí nhồi thịt', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Cá kho thịt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } },
-  { option: 'Thịt rang cháy cạnh', style: { backgroundColor: '#ffffff', textColor: '#d81b60' } },
-  { option: 'Gà xào sả ớt', style: { backgroundColor: '#ffc1e3', textColor: '#ffffff' } }, 
+  { option: 'Sườn xào chua ngọt', style: { backgroundColor: '#1e1e3f', textColor: '#e2e8f0' } },
+  { option: 'Chả lá lốt', style: { backgroundColor: '#16213e', textColor: '#a78bfa' } },
+  { option: 'Thịt kho trứng', style: { backgroundColor: '#1e1e3f', textColor: '#e2e8f0' } },
+  { option: 'Trứng rán', style: { backgroundColor: '#16213e', textColor: '#a78bfa' } },
+  { option: 'Thịt kho tàu', style: { backgroundColor: '#1e1e3f', textColor: '#e2e8f0' } },
+  { option: 'Nem rán', style: { backgroundColor: '#16213e', textColor: '#a78bfa' } },
+  { option: 'Mỳ tôm', style: { backgroundColor: '#1e1e3f', textColor: '#e2e8f0' } },
+  { option: 'Đậu nhồi thịt', style: { backgroundColor: '#16213e', textColor: '#a78bfa' } },
+  { option: 'Hoa bí nhồi thịt', style: { backgroundColor: '#1e1e3f', textColor: '#e2e8f0' } },
+  { option: 'Cá kho thịt', style: { backgroundColor: '#16213e', textColor: '#a78bfa' } },
+  { option: 'Thịt rang cháy cạnh', style: { backgroundColor: '#1e1e3f', textColor: '#e2e8f0' } },
+  { option: 'Gà xào sả ớt', style: { backgroundColor: '#16213e', textColor: '#a78bfa' } },
 ];
 
 const PinkWheel: React.FC = () => {
@@ -42,8 +42,6 @@ const PinkWheel: React.FC = () => {
     setShowModal(true);
   };
 
-  const isNoodles = winMessage === 'Mỳ tôm';
-
   return (
     <div style={styles.container}>
       <style>
@@ -55,19 +53,19 @@ const PinkWheel: React.FC = () => {
         `}
       </style>
 
-      <h1 style={styles.title}>✨ Hôm nay nấu món gì nhỉ? ✨</h1>
+      <h1 style={styles.title}>🎡 Quay Số Hôm Nay</h1>
 
       <div style={styles.wheelWrapper}>
         <Wheel
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber}
           data={data}
-          outerBorderColor="#ffffff" 
+          outerBorderColor="#2d2d5e"
           outerBorderWidth={8}
-          innerRadius={10} 
-          innerBorderColor="#ffffff"
+          innerRadius={10}
+          innerBorderColor="#2d2d5e"
           innerBorderWidth={4}
-          radiusLineColor="#ffffff"
+          radiusLineColor="#2d2d5e"
           radiusLineWidth={2}
           fontFamily="Arial"
           fontSize={16}
@@ -81,7 +79,7 @@ const PinkWheel: React.FC = () => {
           style={mustSpin ? styles.disabledButton : styles.button} 
           disabled={mustSpin}
         >
-          {mustSpin ? 'Đang chọn...' : 'Start now :3'}
+          {mustSpin ? 'Đang chọn...' : 'Quay ngay ✨'}
         </button>
       </div>
 
@@ -89,8 +87,8 @@ const PinkWheel: React.FC = () => {
         <div style={styles.overlay}>
           <div style={styles.modalContent}>
                <>
-                  <div style={{ margin: '15px 0', border: '2px dashed #ff4081', padding: '10px', borderRadius: '15px', backgroundColor: '#fff0f6' }}>
-                    <h1 style={{ color: '#d81b60', fontSize: '1rem', margin: '0' }}>
+                  <div style={{ margin: '15px 0', border: '2px dashed #4f46e5', padding: '10px', borderRadius: '15px', backgroundColor: '#1e1e3f' }}>
+                    <h1 style={{ color: '#a78bfa', fontSize: '1rem', margin: '0' }}>
                       Hôm nay nấu món: {winMessage}
                     </h1>
                     <span style={{ fontSize: '3rem' }}>😼😼😼</span>
@@ -100,7 +98,7 @@ const PinkWheel: React.FC = () => {
               onClick={() => setShowModal(false)}
               style={styles.closeButton}
             >
-              {isNoodles ? 'Tuyệt Vời ❤️' : 'Tuyệt Vời ❤️'}
+              OK ✨
             </button>
           </div>
         </div>
@@ -116,14 +114,14 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '100vh',
-    background: 'linear-gradient(180deg, #ffe6fa 0%, #ffffff 100%)', 
+    background: 'linear-gradient(180deg, #0d0d0d 0%, #1a1a2e 100%)',
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     padding: '20px',
   },
   title: {
-    color: '#d81b60', 
+    color: '#a78bfa',
     marginBottom: '20px',
-    textShadow: '2px 2px 0px white',
+    textShadow: '0 0 20px rgba(167, 139, 250, 0.4)',
     fontSize: '2rem',
     textAlign: 'center',
   },
@@ -132,7 +130,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     alignItems: 'center',
     position: 'relative',
-    filter: 'drop-shadow(0 10px 15px rgba(255, 105, 180, 0.3))',
+    filter: 'drop-shadow(0 10px 15px rgba(124, 58, 237, 0.3))',
   },
   button: {
     marginTop: '30px',
@@ -140,11 +138,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: '18px',
     fontWeight: 'bold',
     cursor: 'pointer',
-    backgroundColor: '#ff4081', 
+    backgroundColor: '#7c3aed',
     color: 'white',
-    border: '4px solid white',
+    border: '2px solid #5b21b6',
     borderRadius: '50px',
-    boxShadow: '0 4px 10px rgba(255, 64, 129, 0.4)',
+    boxShadow: '0 4px 15px rgba(124, 58, 237, 0.5)',
     transition: 'transform 0.2s, box-shadow 0.2s',
     outline: 'none',
   },
@@ -153,31 +151,31 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: '15px 50px',
     fontSize: '18px',
     fontWeight: 'bold',
-    backgroundColor: '#ffc1e3',
-    color: 'white',
-    border: '4px solid white',
+    backgroundColor: '#3730a3',
+    color: '#a5b4fc',
+    border: '2px solid #312e81',
     borderRadius: '50px',
     cursor: 'not-allowed',
   },
   overlay: {
     position: 'fixed',
     top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.6)', 
-    backdropFilter: 'blur(2px)', // Thêm hiệu ứng mờ nền
+    backgroundColor: 'rgba(0,0,0,0.75)',
+    backdropFilter: 'blur(4px)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: '#13131f',
     padding: '30px',
     borderRadius: '25px',
     textAlign: 'center',
     maxWidth: '90%',
     width: '380px',
-    border: '4px solid #ffc1e3',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+    border: '2px solid #3f3f6e',
+    boxShadow: '0 10px 40px rgba(124, 58, 237, 0.3)',
     animation: 'popupScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   },
   closeButton: {
@@ -186,11 +184,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: '16px',
     fontWeight: 'bold',
     cursor: 'pointer',
-    backgroundColor: '#ff4081',
+    backgroundColor: '#7c3aed',
     color: 'white',
     border: 'none',
     borderRadius: '50px',
-    boxShadow: '0 4px 6px rgba(255, 64, 129, 0.3)',
+    boxShadow: '0 4px 10px rgba(124, 58, 237, 0.4)',
   }
 };
 

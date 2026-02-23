@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw, Heart } from 'lucide-react';
+import { RefreshCw, Zap } from 'lucide-react';
 import './DateCard.css';
 
 interface Activity {
     id: number;
     content: string;
-    icon: string;
 }
 
 const allActivities: string[] = [
@@ -35,7 +34,7 @@ const DateCard: React.FC = () => {
         const shuffled = [...allActivities]
             .sort(() => Math.random() - 0.5)
             .slice(0, 6)
-            .map((content, index) => ({ id: index, content, icon: '✨' }));
+            .map((content, index) => ({ id: index, content }));
         setCards(shuffled);
     };
 
@@ -50,9 +49,9 @@ const DateCard: React.FC = () => {
     };
 
     return (
-        <div className="date-discovery-container">
-            <h1 className="title">✨ Khám phá ✨</h1>
-            <p className="subtitle">Chọn một thẻ bài để xem điều bất ngờ nhé!</p>
+        <div className="discovery-container">
+            <h1 className="title">⚡ Khám phá hôm nay</h1>
+            <p className="subtitle">Chọn một thẻ bài để xem điều bất ngờ!</p>
 
             <div className="card-grid">
                 {cards.map((card, index) => (
@@ -64,13 +63,13 @@ const DateCard: React.FC = () => {
                         <div className="card-inner">
                             <div className="card-front">
                                 <div className="card-pattern">
-                                    <Heart fill="#ff4081" color="#ff4081" size={40} />
+                                    <Zap fill="#f59e0b" color="#f59e0b" size={40} />
                                 </div>
                             </div>
                             <div className="card-back">
                                 <div className="card-content">
                                     <p>{card.content}</p>
-                                    <span className="love-icon">💖</span>
+                                    <span className="activity-icon">⚡</span>
                                 </div>
                             </div>
                         </div>

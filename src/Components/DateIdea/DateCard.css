@@ -1,31 +1,30 @@
-.date-discovery-container * {
+.discovery-container * {
     box-sizing: border-box;
 }
 
-.date-discovery-container {
+.discovery-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: linear-gradient(180deg, #ffe6fa 0%, #ffffff 100%);
+    background: linear-gradient(180deg, #0d0d0d 0%, #1a1a2e 100%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 40px 20px;
 }
 
-.date-discovery-container .title {
-    color: #d81b60;
+.discovery-container .title {
+    color: #a78bfa;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 0px white;
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
     font-size: 2.5rem;
     text-align: center;
 }
 
-.date-discovery-container .subtitle {
-    color: #d81b60;
+.discovery-container .subtitle {
+    color: #6b7280;
     margin-bottom: 40px;
     font-size: 1.1rem;
-    opacity: 0.8;
 }
 
 .card-grid {
@@ -50,7 +49,7 @@
     text-align: center;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
-    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
     border-radius: 15px;
 }
 
@@ -70,13 +69,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 4px solid white;
+    border: 2px solid #3f3f6e;
     overflow: hidden;
-    /* Tránh tràn nội dung làm biến dạng thẻ */
 }
 
 .card-front {
-    background-color: #ffc1e3;
+    background-color: #1e1e3f;
     z-index: 2;
 }
 
@@ -86,13 +84,13 @@
     justify-content: center;
     width: 60px;
     height: 60px;
-    background-color: white;
+    background-color: #2d2d5e;
     border-radius: 50%;
     animation: pulse 2s infinite;
 }
 
 .card-back {
-    background-color: white;
+    background-color: #13131f;
     transform: rotateY(180deg);
     padding: 15px;
     z-index: 1;
@@ -109,16 +107,15 @@
 }
 
 .card-content p {
-    color: #d81b60;
+    color: #e2e8f0;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     line-height: 1.4;
     margin: 0;
     word-break: break-word;
-    /* Đảm bảo text không đẩy width */
 }
 
-.love-icon {
+.activity-icon {
     font-size: 2rem;
 }
 
@@ -130,18 +127,18 @@
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    background-color: #ff4081;
+    background-color: #7c3aed;
     color: white;
-    border: 4px solid white;
+    border: 2px solid #5b21b6;
     border-radius: 50px;
-    box-shadow: 0 4px 10px rgba(255, 64, 129, 0.4);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
     transition: transform 0.2s, box-shadow 0.2s;
     outline: none;
-    border-radius: 50px;
 }
 
 .shuffle-btn:hover {
     transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
 }
 
 .shuffle-btn:active {
@@ -167,7 +164,7 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .date-discovery-container .title {
+    .discovery-container .title {
         font-size: 1.8rem;
     }
 }
