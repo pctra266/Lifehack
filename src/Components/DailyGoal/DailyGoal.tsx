@@ -18,7 +18,7 @@ interface Goal {
 
 const DailyGoal: React.FC = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
-  const [note, setNote] = useState('');
+  const [_note, setNote] = useState('');
   const [tempNote, setTempNote] = useState('');
   const [newGoal, setNewGoal] = useState('');
 
