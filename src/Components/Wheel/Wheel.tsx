@@ -53,7 +53,7 @@ const PinkWheel: React.FC = () => {
         `}
       </style>
 
-      <h1 style={styles.title}>🎡 Quay Số Hôm Nay</h1>
+      <h1 style={styles.title}>🎡 Hôm nay ăn gì</h1>
 
       <div style={styles.wheelWrapper}>
         <Wheel
@@ -73,10 +73,10 @@ const PinkWheel: React.FC = () => {
           spinDuration={0.8}
           onStopSpinning={handleStopSpinning}
         />
-        
-        <button 
-          onClick={handleSpinClick} 
-          style={mustSpin ? styles.disabledButton : styles.button} 
+
+        <button
+          onClick={handleSpinClick}
+          style={mustSpin ? styles.disabledButton : styles.button}
           disabled={mustSpin}
         >
           {mustSpin ? 'Đang chọn...' : 'Quay ngay ✨'}
@@ -86,15 +86,15 @@ const PinkWheel: React.FC = () => {
       {showModal && (
         <div style={styles.overlay}>
           <div style={styles.modalContent}>
-               <>
-                  <div style={{ margin: '15px 0', border: '2px dashed #4f46e5', padding: '10px', borderRadius: '15px', backgroundColor: '#1e1e3f' }}>
-                    <h1 style={{ color: '#a78bfa', fontSize: '1rem', margin: '0' }}>
-                      Hôm nay nấu món: {winMessage}
-                    </h1>
-                    <span style={{ fontSize: '3rem' }}>😼😼😼</span>
-                  </div>
-               </>
-            <button 
+            <>
+              <div style={{ margin: '15px 0', border: '2px dashed #4f46e5', padding: '10px', borderRadius: '15px', backgroundColor: '#1e1e3f' }}>
+                <h1 style={{ color: '#a78bfa', fontSize: '1rem', margin: '0' }}>
+                  Hôm nay nấu món: {winMessage}
+                </h1>
+                <span style={{ fontSize: '3rem' }}>😼😼😼</span>
+              </div>
+            </>
+            <button
               onClick={() => setShowModal(false)}
               style={styles.closeButton}
             >
