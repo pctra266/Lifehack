@@ -17,6 +17,13 @@ function todayISO(): string {
   return d.toISOString().split('T')[0];
 }
 
+/** Return the calendar date for day N of the challenge (e.g. "28/4") */
+function getDayDate(startDate: string, dayNumber: number): string {
+  const d = new Date(startDate);
+  d.setDate(d.getDate() + dayNumber - 1);
+  return `${d.getDate()}/${d.getMonth() + 1}`;
+}
+
 // ── Setup Screen ─────────────────────────────────────────────────────────────
 
 interface SetupScreenProps {
@@ -337,14 +344,19 @@ export default function ChallengeTracker() {
         {challenge.daily_logs.map((log) => {
           const isCurrentDay = log.day_number === currentDay;
           const isFuture = currentDay > 0 && log.day_number > currentDay;
+          const hasImage = Boolean(log.image_url);
           const cellClass = [
             'ct-cell',
             log.status !== 'pending' ? log.status : '',
             isCurrentDay ? 'current-day' : '',
             isFuture ? 'future' : '',
+            hasImage ? 'has-image' : '',
           ]
             .filter(Boolean)
             .join(' ');
+
+          const calDate = getDayDate(challenge.start_date, log.day_number);
+          const icon = statusIcon(log.status, isCurrentDay);
 
           return (
             <div
@@ -353,15 +365,33 @@ export default function ChallengeTracker() {
               className={cellClass}
               role="gridcell"
               tabIndex={0}
-              aria-label={`Day ${log.day_number}: ${log.status}`}
+              aria-label={`Day ${log.day_number} (${calDate}): ${log.status}`}
               onClick={() => handleCellClick(log.day_number)}
               onKeyDown={(e) => e.key === 'Enter' && handleCellClick(log.day_number)}
             >
-              <span className="ct-cell-day">{log.day_number}</span>
-              <span className="ct-cell-icon">
-                {statusIcon(log.status, isCurrentDay)}
-              </span>
-              {log.image_url && <span className="ct-cell-has-img" aria-hidden="true" />}
+              {/* Photo background */}
+              {hasImage && (
+                <img
+                  className="ct-cell-bg-img"
+                  src={log.image_url}
+                  alt={`Day ${log.day_number} progress`}
+                />
+              )}
+
+              {/* Gradient overlay (always present so text is readable on images) */}
+              <div className="ct-cell-overlay" />
+
+              {/* Content */}
+              <div className="ct-cell-content">
+                {/* Top row: day badge + status icon */}
+                <div className="ct-cell-top">
+                  <span className="ct-cell-day-badge">Day {log.day_number}</span>
+                  {icon && <span className="ct-cell-status-icon">{icon}</span>}
+                </div>
+
+                {/* Calendar date — prominent */}
+                <span className="ct-cell-date">{calDate}</span>
+              </div>
             </div>
           );
         })}

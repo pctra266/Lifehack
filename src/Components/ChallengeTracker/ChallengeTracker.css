@@ -281,42 +281,38 @@
   transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── Grid ────────────────────────────────────────────────── */
+/* ── Grid ─────────────────────────────────────────────────── */
 .ct-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.75rem;
   animation: ct-fade-up 0.4s ease both;
   animation-delay: 0.1s;
 }
 
 @media (max-width: 700px) {
-  .ct-grid { grid-template-columns: repeat(5, 1fr); }
-}
-@media (max-width: 500px) {
   .ct-grid { grid-template-columns: repeat(4, 1fr); }
 }
+@media (max-width: 480px) {
+  .ct-grid { grid-template-columns: repeat(3, 1fr); }
+}
 
-/* ── Day Cell ────────────────────────────────────────────── */
+/* ── Day Cell ──────────────────────────────────────────────── */
 .ct-cell {
-  aspect-ratio: 1;
+  aspect-ratio: 3 / 4;
   border-radius: var(--ct-radius-sm);
   border: 1px solid var(--ct-pending-border);
   background: var(--ct-pending-bg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
   position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
   user-select: none;
-  gap: 0.2rem;
+  overflow: hidden;
 }
 
 .ct-cell:hover {
   transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
   border-color: var(--ct-accent);
 }
 
@@ -339,35 +335,121 @@
 }
 
 .ct-cell.future {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: default;
 }
 
-.ct-cell-day {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--ct-text);
-  line-height: 1;
-}
-
-.ct-cell.success .ct-cell-day { color: var(--ct-success); }
-.ct-cell.failure .ct-cell-day { color: var(--ct-failure); }
-
-.ct-cell-icon {
-  font-size: 0.9rem;
-  line-height: 1;
-}
-
-.ct-cell-has-img {
+/* Photo background */
+.ct-cell-bg-img {
   position: absolute;
-  bottom: 4px;
-  right: 5px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--ct-accent);
-  box-shadow: 0 0 4px var(--ct-accent);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
 }
+
+.ct-cell:hover .ct-cell-bg-img {
+  transform: scale(1.08);
+}
+
+/* Gradient overlay — always present so text stays readable */
+.ct-cell-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.10) 0%,
+    rgba(0, 0, 0, 0.52) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ct-cell.has-image .ct-cell-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.22) 0%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
+.ct-cell.success.has-image .ct-cell-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(34, 197, 94, 0.22) 0%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+}
+
+.ct-cell.failure.has-image .ct-cell-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(239, 68, 68, 0.22) 0%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+}
+
+/* Content layer (above overlay) */
+.ct-cell-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.45rem 0.5rem 0.55rem;
+  pointer-events: none;
+}
+
+/* Top row: Day N badge + status icon */
+.ct-cell-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.2rem;
+}
+
+.ct-cell-day-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  white-space: nowrap;
+}
+
+.ct-cell.success .ct-cell-day-badge { color: rgba(134, 239, 172, 0.9); }
+.ct-cell.failure .ct-cell-day-badge { color: rgba(252, 165, 165, 0.9); }
+.ct-cell.current-day .ct-cell-day-badge { color: var(--ct-accent); }
+
+.ct-cell-status-icon {
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+.ct-cell.success .ct-cell-status-icon { color: var(--ct-success); }
+.ct-cell.failure .ct-cell-status-icon { color: var(--ct-failure); }
+.ct-cell.current-day .ct-cell-status-icon { color: var(--ct-accent); }
+
+/* Calendar date — bottom, prominent */
+.ct-cell-date {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.ct-cell.success .ct-cell-date { color: #bbf7d0; }
+.ct-cell.failure .ct-cell-date { color: #fecaca; }
+.ct-cell.future  .ct-cell-date { color: rgba(255,255,255,0.38); }
 
 /* ── Side Panel ──────────────────────────────────────────── */
 .ct-overlay {
