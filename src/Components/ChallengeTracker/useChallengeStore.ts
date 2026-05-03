@@ -4,6 +4,46 @@ import { db } from '../../firebase';
 import { doc, onSnapshot, setDoc, deleteDoc } from 'firebase/firestore';
 
 const CHALLENGE_DOC = doc(db, 'challenge_tracker', 'active');
+const LOCAL_IMAGE_PREFIX = 'ct_img_';
+
+// ── Local image helpers (localStorage, keyed by day number) ──────────────────
+
+function localImageKey(dayNumber: number) {
+  return `${LOCAL_IMAGE_PREFIX}${dayNumber}`;
+}
+
+function loadLocalImages(): Record<number, string> {
+  const result: Record<number, string> = {};
+  for (let i = 1; i <= 30; i++) {
+    const val = localStorage.getItem(localImageKey(i));
+    if (val) result[i] = val;
+  }
+  return result;
+}
+
+function saveLocalImage(dayNumber: number, base64: string) {
+  if (base64) {
+    localStorage.setItem(localImageKey(dayNumber), base64);
+  } else {
+    localStorage.removeItem(localImageKey(dayNumber));
+  }
+}
+
+function clearAllLocalImages() {
+  for (let i = 1; i <= 30; i++) {
+    localStorage.removeItem(localImageKey(i));
+  }
+}
+
+/** Strip image_url from all logs — we never write images to Firestore */
+function toFirestoreDoc(challenge: Challenge): Challenge {
+  return {
+    ...challenge,
+    daily_logs: challenge.daily_logs.map((log) => ({ ...log, image_url: '' })),
+  };
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function createEmptyLogs(): DailyLog[] {
   return Array.from({ length: 30 }, (_, i) => ({
@@ -27,15 +67,26 @@ export function computeCurrentDay(startDate: string): number {
   return day;
 }
 
+// ── Hook ──────────────────────────────────────────────────────────────────────
+
 export function useChallengeStore() {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Real-time listener from Firestore
+  // Real-time listener from Firestore; merge local images on every snapshot
   useEffect(() => {
     const unsubscribe = onSnapshot(CHALLENGE_DOC, (snapshot) => {
       if (snapshot.exists()) {
-        setChallenge(snapshot.data() as Challenge);
+        const data = snapshot.data() as Challenge;
+        const localImages = loadLocalImages();
+        const merged: Challenge = {
+          ...data,
+          daily_logs: data.daily_logs.map((log) => ({
+            ...log,
+            image_url: localImages[log.day_number] ?? '',
+          })),
+        };
+        setChallenge(merged);
       } else {
         setChallenge(null);
       }
@@ -50,15 +101,22 @@ export function useChallengeStore() {
       start_date: startDate,
       daily_logs: createEmptyLogs(),
     };
-    await setDoc(CHALLENGE_DOC, newChallenge);
+    // Only cloud data (images already empty)
+    await setDoc(CHALLENGE_DOC, toFirestoreDoc(newChallenge));
   }, []);
 
   const resetChallenge = useCallback(async () => {
+    clearAllLocalImages();
     await deleteDoc(CHALLENGE_DOC);
   }, []);
 
   const updateLog = useCallback(
-    async (dayNumber: number, patch: Partial<Omit<DailyLog, 'day_number'>>) => {
+    (dayNumber: number, patch: Partial<Omit<DailyLog, 'day_number'>>) => {
+      // Save image locally; save everything else to Firestore
+      if (patch.image_url !== undefined) {
+        saveLocalImage(dayNumber, patch.image_url);
+      }
+
       setChallenge((prev) => {
         if (!prev) return prev;
         const updated: Challenge = {
@@ -67,8 +125,8 @@ export function useChallengeStore() {
             log.day_number === dayNumber ? { ...log, ...patch } : log
           ),
         };
-        // Write to Firestore (fire-and-forget, optimistic UI via setChallenge)
-        setDoc(CHALLENGE_DOC, updated);
+        // Write to Firestore without images (fire-and-forget)
+        setDoc(CHALLENGE_DOC, toFirestoreDoc(updated));
         return updated;
       });
     },

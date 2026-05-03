@@ -3,6 +3,27 @@ import './ChallengeTracker.css';
 import type { DailyLog, DayStatus } from './types';
 import { useChallengeStore } from './useChallengeStore';
 
+// ── Image compression (Canvas, no extra dependencies) ─────────────────────────
+
+/** Resize image to maxPx on longest side, encode as JPEG. Safe for localStorage. */
+function compressImage(file: File, maxPx = 1200, quality = 0.82): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = reject;
+    img.src = objectUrl;
+  });
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function statusIcon(status: DayStatus, isCurrentDay: boolean): string {
@@ -100,6 +121,7 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
   const [status, setStatus] = useState<DayStatus>(log.status);
   const [note, setNote] = useState(log.note_content);
   const [imageUrl, setImageUrl] = useState(log.image_url);
+  const [compressing, setCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleSave() {
@@ -107,14 +129,19 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
     onClose();
   }
 
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setImageUrl(ev.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+    setCompressing(true);
+    try {
+      const compressed = await compressImage(file);
+      setImageUrl(compressed);
+    } catch {
+      alert('Không thể đọc ảnh. Vui lòng thử lại.');
+    } finally {
+      setCompressing(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   }
 
   const panelTitle = `Day ${log.day_number}`;
@@ -179,7 +206,13 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
           {/* Image Upload */}
           <div className="ct-image-section">
             <h4>Progress Photo</h4>
-            {imageUrl ? (
+            {compressing && (
+              <div className="ct-compressing">
+                <div className="ct-compressing-spinner" />
+                <span>Đang nén ảnh...</span>
+              </div>
+            )}
+            {imageUrl && !compressing ? (
               <div className="ct-img-preview">
                 <img src={imageUrl} alt={`Day ${log.day_number} progress`} />
                 <button
@@ -192,7 +225,7 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
                   ×
                 </button>
               </div>
-            ) : (
+            ) : !compressing && (
               <div
                 className="ct-img-upload-zone"
                 id={`ct-img-zone-day${log.day_number}`}
@@ -203,8 +236,8 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
                 aria-label="Upload progress photo"
               >
                 <span className="upload-icon">📷</span>
-                <p>Click to upload a progress photo</p>
-                <p style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>JPG, PNG, WebP supported</p>
+                <p>Chọn ảnh từ máy ảnh hoặc thư viện</p>
+                <p style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>Tự động nén — JPG, PNG, WebP</p>
               </div>
             )}
             <input
@@ -212,6 +245,7 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
               id={`ct-file-input-day${log.day_number}`}
               type="file"
               accept="image/*"
+              capture="environment"
               style={{ display: 'none' }}
               onChange={handleImageChange}
             />
@@ -224,6 +258,7 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
             id="ct-panel-cancel-btn"
             className="ct-btn ct-btn-ghost"
             onClick={onClose}
+            disabled={compressing}
           >
             Cancel
           </button>
@@ -231,6 +266,7 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
             id="ct-panel-save-btn"
             className="ct-btn ct-btn-primary"
             onClick={handleSave}
+            disabled={compressing}
           >
             💾 Save
           </button>
