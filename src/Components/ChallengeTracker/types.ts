@@ -4,7 +4,7 @@ export interface DailyLog {
   day_number: number;
   status: DayStatus;
   note_content: string;
-  image_url: string; // base64 data URL
+  image_urls: string[]; // base64 JPEGs stored in localStorage
 }
 
 export interface Challenge {

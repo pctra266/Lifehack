@@ -120,28 +120,33 @@ interface DayPanelProps {
 function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
   const [status, setStatus] = useState<DayStatus>(log.status);
   const [note, setNote] = useState(log.note_content);
-  const [imageUrl, setImageUrl] = useState(log.image_url);
+  const [imageUrls, setImageUrls] = useState<string[]>(log.image_urls);
   const [compressing, setCompressing] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);    // gallery (multiple)
+  const cameraInputRef = useRef<HTMLInputElement>(null);  // camera (single)
 
   function handleSave() {
-    onSave({ status, note_content: note, image_url: imageUrl });
+    onSave({ status, note_content: note, image_urls: imageUrls });
     onClose();
   }
 
   async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
     setCompressing(true);
     try {
-      const compressed = await compressImage(file);
-      setImageUrl(compressed);
+      const compressed = await Promise.all(files.map((f) => compressImage(f)));
+      setImageUrls((prev) => [...prev, ...compressed]);
     } catch {
       alert('Không thể đọc ảnh. Vui lòng thử lại.');
     } finally {
       setCompressing(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (e.target) e.target.value = '';
     }
+  }
+
+  function removeImage(index: number) {
+    setImageUrls((prev) => prev.filter((_, i) => i !== index));
   }
 
   const panelTitle = `Day ${log.day_number}`;
@@ -205,47 +210,76 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
 
           {/* Image Upload */}
           <div className="ct-image-section">
-            <h4>Progress Photo</h4>
+            <h4>Progress Photos {imageUrls.length > 0 && <span className="ct-img-count">{imageUrls.length}</span>}</h4>
+
+            {/* Thumbnail grid */}
+            {imageUrls.length > 0 && (
+              <div className="ct-img-grid">
+                {imageUrls.map((url, i) => (
+                  <div key={i} className="ct-img-thumb">
+                    <img src={url} alt={`Photo ${i + 1}`} />
+                    <button
+                      className="ct-img-thumb-remove"
+                      onClick={() => removeImage(i)}
+                      aria-label={`Remove photo ${i + 1}`}
+                      title="Remove"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Compressing indicator */}
             {compressing && (
               <div className="ct-compressing">
                 <div className="ct-compressing-spinner" />
                 <span>Đang nén ảnh...</span>
               </div>
             )}
-            {imageUrl && !compressing ? (
-              <div className="ct-img-preview">
-                <img src={imageUrl} alt={`Day ${log.day_number} progress`} />
+
+            {/* Add buttons — always visible */}
+            {!compressing && (
+              <div className="ct-img-pick-row">
                 <button
-                  id={`ct-img-remove-day${log.day_number}`}
-                  className="ct-img-remove"
-                  onClick={() => setImageUrl('')}
-                  aria-label="Remove image"
-                  title="Remove image"
+                  id={`ct-btn-camera-day${log.day_number}`}
+                  className="ct-img-pick-btn"
+                  onClick={() => cameraInputRef.current?.click()}
+                  type="button"
                 >
-                  ×
+                  <span>📷</span>
+                  Chụp ảnh
+                </button>
+                <button
+                  id={`ct-btn-gallery-day${log.day_number}`}
+                  className="ct-img-pick-btn"
+                  onClick={() => fileInputRef.current?.click()}
+                  type="button"
+                >
+                  <span>🖼️</span>
+                  Thư viện
                 </button>
               </div>
-            ) : !compressing && (
-              <div
-                className="ct-img-upload-zone"
-                id={`ct-img-zone-day${log.day_number}`}
-                onClick={() => fileInputRef.current?.click()}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
-                aria-label="Upload progress photo"
-              >
-                <span className="upload-icon">📷</span>
-                <p>Chọn ảnh từ máy ảnh hoặc thư viện</p>
-                <p style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>Tự động nén — JPG, PNG, WebP</p>
-              </div>
             )}
+
+            {/* Camera input */}
+            <input
+              ref={cameraInputRef}
+              id={`ct-camera-input-day${log.day_number}`}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+            />
+            {/* Gallery input — multiple selection */}
             <input
               ref={fileInputRef}
               id={`ct-file-input-day${log.day_number}`}
               type="file"
               accept="image/*"
-              capture="environment"
+              multiple
               style={{ display: 'none' }}
               onChange={handleImageChange}
             />
@@ -391,7 +425,7 @@ export default function ChallengeTracker() {
         {challenge.daily_logs.map((log) => {
           const isCurrentDay = log.day_number === currentDay;
           const isFuture = currentDay > 0 && log.day_number > currentDay;
-          const hasImage = Boolean(log.image_url);
+          const hasImage = log.image_urls.length > 0;
           const cellClass = [
             'ct-cell',
             log.status !== 'pending' ? log.status : '',
@@ -416,11 +450,11 @@ export default function ChallengeTracker() {
               onClick={() => handleCellClick(log.day_number)}
               onKeyDown={(e) => e.key === 'Enter' && handleCellClick(log.day_number)}
             >
-              {/* Photo background */}
+              {/* Photo background — use first image */}
               {hasImage && (
                 <img
                   className="ct-cell-bg-img"
-                  src={log.image_url}
+                  src={log.image_urls[0]}
                   alt={`Day ${log.day_number} progress`}
                 />
               )}
