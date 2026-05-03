@@ -1,7 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Challenge, DailyLog, DayStatus } from './types';
+import { db } from '../../firebase';
+import { doc, onSnapshot, setDoc, deleteDoc } from 'firebase/firestore';
 
-const STORAGE_KEY = 'lifehack_challenge_tracker';
+const CHALLENGE_DOC = doc(db, 'challenge_tracker', 'active');
 
 function createEmptyLogs(): DailyLog[] {
   return Array.from({ length: 30 }, (_, i) => ({
@@ -10,20 +12,6 @@ function createEmptyLogs(): DailyLog[] {
     note_content: '',
     image_url: '',
   }));
-}
-
-function loadFromStorage(): Challenge | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as Challenge;
-  } catch {
-    return null;
-  }
-}
-
-function saveToStorage(challenge: Challenge) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(challenge));
 }
 
 /** Returns the 1-based day number the user is currently on, clamped 1–30. Returns 0 if not started yet or past day 30. */
@@ -40,25 +28,37 @@ export function computeCurrentDay(startDate: string): number {
 }
 
 export function useChallengeStore() {
-  const [challenge, setChallenge] = useState<Challenge | null>(() => loadFromStorage());
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const startChallenge = useCallback((name: string, startDate: string) => {
+  // Real-time listener from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(CHALLENGE_DOC, (snapshot) => {
+      if (snapshot.exists()) {
+        setChallenge(snapshot.data() as Challenge);
+      } else {
+        setChallenge(null);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const startChallenge = useCallback(async (name: string, startDate: string) => {
     const newChallenge: Challenge = {
       challenge_name: name,
       start_date: startDate,
       daily_logs: createEmptyLogs(),
     };
-    saveToStorage(newChallenge);
-    setChallenge(newChallenge);
+    await setDoc(CHALLENGE_DOC, newChallenge);
   }, []);
 
-  const resetChallenge = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
-    setChallenge(null);
+  const resetChallenge = useCallback(async () => {
+    await deleteDoc(CHALLENGE_DOC);
   }, []);
 
   const updateLog = useCallback(
-    (dayNumber: number, patch: Partial<Omit<DailyLog, 'day_number'>>) => {
+    async (dayNumber: number, patch: Partial<Omit<DailyLog, 'day_number'>>) => {
       setChallenge((prev) => {
         if (!prev) return prev;
         const updated: Challenge = {
@@ -67,7 +67,8 @@ export function useChallengeStore() {
             log.day_number === dayNumber ? { ...log, ...patch } : log
           ),
         };
-        saveToStorage(updated);
+        // Write to Firestore (fire-and-forget, optimistic UI via setChallenge)
+        setDoc(CHALLENGE_DOC, updated);
         return updated;
       });
     },
@@ -88,6 +89,7 @@ export function useChallengeStore() {
 
   return {
     challenge,
+    loading,
     currentDay,
     successCount,
     failureCount,

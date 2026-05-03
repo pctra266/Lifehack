@@ -245,6 +245,7 @@ function DayPanel({ log, isCurrent, onClose, onSave }: DayPanelProps) {
 export default function ChallengeTracker() {
   const {
     challenge,
+    loading,
     currentDay,
     successCount,
     failureCount,
@@ -255,6 +256,16 @@ export default function ChallengeTracker() {
   } = useChallengeStore();
 
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
+
+  // ── Loading from Firestore
+  if (loading) {
+    return (
+      <div className="ct-wrapper ct-loading">
+        <div className="ct-spinner" aria-label="Loading challenge data..." />
+        <p>Loading your challenge...</p>
+      </div>
+    );
+  }
 
   // ── No active challenge → Setup screen
   if (!challenge) {
@@ -278,9 +289,9 @@ export default function ChallengeTracker() {
     if (selectedDay !== null) updateLog(selectedDay, patch);
   }
 
-  function handleReset() {
+  async function handleReset() {
     if (window.confirm('Reset this challenge? All progress will be lost.')) {
-      resetChallenge();
+      await resetChallenge();
     }
   }
 
